@@ -51,30 +51,7 @@ class wGAN:
 
         return generator
 
-        '''
-        input = Input(shape=(self._latent_size, ))
-        d1 = Dense(7 * 7 * 128)(input)
-        d1 = ReLU()(d1)
-        d1 = Reshape((7, 7, 128))(d1)
-
-        s1 = UpSampling2D()(d1)
-        Conv1 = Conv2D(128, kernel_size=(4, 4), padding='same')(s1)
-        Conv1 = BatchNormalization(momentum=0.8)(Conv1)
-        Conv1 = ReLU()(Conv1)
-
-        s1 = UpSampling2D()(Conv1)
-        Conv1 = Conv2D(64, kernel_size=(4,4), padding="same")(s1)
-        Conv1 = BatchNormalization(momentum=0.8)(Conv1)
-        Conv1 = ReLU()(Conv1)
-
-        out_image = Conv2D(self._channels, kernel_size=(4,4), padding="same", activation="tanh")(Conv1)
-
-        generator = tf.keras.Model(inputs=input, outputs=out_image)
-
-        return generator
-        '''
     def _bulit_Discri(self):
-        
     
         input = Input(shape=(self._width, self._height, self._channels))
 
@@ -87,77 +64,17 @@ class wGAN:
         Conv1 = LeakyReLU(alpha=0.2)(Conv1)
 
         Flat = Flatten()(Conv1)
+        
+        # wGAN最後的地方不用加activation function(sigmoid or tanh)
         out_image = Dense(1)(Flat)
 
         discrimintor = tf.keras.Model(inputs=input, outputs=out_image)
 
         return discrimintor
         
-        '''
-        input = Input(shape=(self._width, self._height, self._channels))
-        Conv1 = Conv2D(16, kernel_size=3, strides=2, padding="same")(input)
-        Conv1 = LeakyReLU(alpha=0.2)(Conv1)
-        Conv1 = Dropout(0.25)(Conv1)
-
-        Conv1 = Conv2D(32, kernel_size=3, strides=2, padding="same")(Conv1)
-        Conv1 = ZeroPadding2D(padding=((0,1),(0,1)))(Conv1)
-        Conv1 = BatchNormalization(momentum=0.8)(Conv1)
-        Conv1 = LeakyReLU(alpha=0.2)(Conv1)
-        Conv1 = Dropout(0.25)(Conv1)
-
-        Conv1 = Conv2D(64, kernel_size=3, strides=2, padding="same")(Conv1)
-        Conv1 = BatchNormalization(momentum=0.8)(Conv1)
-        Conv1 = LeakyReLU(alpha=0.2)(Conv1)
-        Conv1 = Dropout(0.25)(Conv1)
-
-        Conv1 = Conv2D(128, kernel_size=3, strides=1, padding="same")(Conv1)
-        Conv1 = BatchNormalization(momentum=0.8)(Conv1)
-        Conv1 = LeakyReLU(alpha=0.2)(Conv1) 
-        Conv1 = Dropout(0.25)(Conv1)
-
-        Conv1 = Flatten()(Conv1)
-        out_image = Dense(1)(Conv1)
-
-        discrimintor = tf.keras.Model(inputs=input, outputs=out_image)
-
-        return discrimintor
-        '''
-        
     @tf.function
     def train_d_model_step(self, data, batch_size=32, clip_min=-2.0, clip_max=2):
-        
-        # data已經在外圍做好隨機挑選(這邊是已經隨機選出來的data)
-        '''
-        # 先train real images
-
-        real_labels = -tf.ones([batch_size, 1])
-
-        with tf.GradientTape() as tape:
-            predict_labels = self.Discriminator_model(data)
-            d_loss_r = self.loss_fn(real_labels, predict_labels)
-        grads = tape.gradient(d_loss_r, self.Discriminator_model.trainable_weights)
-        self.optimizer_d.apply_gradients(zip(grads, self.Discriminator_model.trainable_weights))
-
-        # 再來train fake iamges
-
-        # 生成隨機的向量和隨機的圖片
-        gen_noise = tf.random.normal([batch_size, self._latent_size])
-
-        fake_labels = tf.ones([batch_size, 1])
-
-        with tf.GradientTape() as tape:
-            predict_labes = self.Discriminator_model(self.Generate_model(gen_noise))
-            d_loss_f = self.loss_fn(fake_labels, predict_labes)
-        grads = tape.gradient(d_loss_f, self.Discriminator_model.trainable_weights)
-        self.optimizer_d.apply_gradients(zip(grads, self.Discriminator_model.trainable_weights))
-
-        for weight in self.Discriminator_model.trainable_variables:
-            weight.assign(tf.clip_by_value(weight, clip_min, clip_max))
-
-
-        return (d_loss_r + d_loss_f) * 0.5
-        '''
-        
+    
         # data已經在外圍做好隨機挑選(這邊是已經隨機選出來的data)
         
         # 生成隨機的向量和隨機的圖片
@@ -178,6 +95,7 @@ class wGAN:
         grads = tape.gradient(d_loss, self.Discriminator_model.trainable_weights)
         self.optimizer_d.apply_gradients(zip(grads, self.Discriminator_model.trainable_weights))
 
+        # 做weight的clip
         for weight in self.Discriminator_model.trainable_variables:
             weight.assign(tf.clip_by_value(weight, clip_min, clip_max))
 
