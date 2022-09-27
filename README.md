@@ -1,17 +1,18 @@
- # **Wasserstein GAN (wGAN)**# 
+ # **Wasserstein GAN (wGAN)**
  
-## CGAN是什麼?
-
->Conditional GAN 在基於 GAN 下，增加輸入條件，改善原本 GAN 無法生成特定圖片的問題。 <br>
->因此 cGAN 將原本 GAN 的損失函數修改如下：<br>
+## wGAN是什麼?
+>在 GAN 中，需要注意其中的 Generator 和 Discriminator 要"同步前進"，意思為如果其中一方訓練得太好(太聰明)，就容易導致不收斂。<br>
+>因此在此前提下，wGAN做出了以下四點的修改，讓 GAN 的訓練更加穩定：
+> - Discriminator 的輸出層移除 Sigmoid 函數。
+> - Discriminator 在訓練過程中，進行權重裁減(weights clip)。
+> - 評估模型的損失函數，從 Cross Entropy 修改成 Wasserstein loss。
+> - 不使用含有動量(momentum)的最佳化方法，如 Adam，而在此論文中，使用 RMSprop。
+> <br>
+>最後整體演算法如下：
 >
->$$\underset{G}{\min} \ \underset{D}{\max} \ V(D,G) = \mathbb{E}\_{x \sim p_{data}(x)} \left[ \log \ D(x|y) \right] + \mathbb{E}\_{z \sim p_{z}(z)} \left[\log \ (1 - D(x|y)) \right]$$
->
->可以注意到cGAN損失函數裡的 Discriminator 修改為 $D(x|y)$ (在 GAN 或 DCGAN 中，為 $D(x)$ )，而此一改動代表著不僅有 noise 作為 Generator 的輸入，加入了 label 來共同當成 Generator 的輸入， Discriminator 也是如此，因此改動後的流程圖如下：
->
->![](https://www.mathworks.com/help/examples/nnet/win64/TrainConditionalGenerativeAdversarialNetworkCGANExample_02.png) <br>
->圖片取自 [這裡](https://www.mathworks.com/help/deeplearning/ug/train-conditional-generative-adversarial-network.html)
-
+> ![](https://github.com/Min-Syue/wGAN/blob/main/wGAN_alg.PNG)
+> 
+>圖片取自wGAN的論文，連結在 [這裡](https://arxiv.org/abs/1701.07875)
 ## 生成結果
 > ### Mnist 結果
 > 每張數字圖片上的 label 代表要模型生成的數字，如第一張圖片(左上角) label 為4，則代表 Generator 要生成數字4的圖片！
