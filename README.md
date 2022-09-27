@@ -9,7 +9,8 @@
 > - 不使用含有動量(momentum)的最佳化方法，如 Adam，而在此論文中，使用 RMSprop。
 > <br>
 >最後整體演算法如下：
->
+>![](https://github.com/Min-Syue/wGAN/blob/main/wGAN_alg.PNG)
+>圖片取自wGAN的論文，連結在![這裡](https://arxiv.org/abs/1701.07875)
 ## 生成結果
 > ### Mnist 結果
 > 每張數字圖片上的 label 代表要模型生成的數字，如第一張圖片(左上角) label 為4，則代表 Generator 要生成數字4的圖片！
