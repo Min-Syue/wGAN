@@ -8,7 +8,7 @@
 > - 評估模型的損失函數，從 Cross Entropy 修改成 Wasserstein loss。
 > - 不使用含有動量(momentum)的最佳化方法，如 Adam，而在此論文中，使用 RMSprop。
 > <br>
->最後整體演算法如下：
+>最後 wGAN 演算法如下：
 >
 > ![](https://github.com/Min-Syue/wGAN/blob/main/wGAN_alg.PNG)
 > 
