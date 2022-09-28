@@ -15,5 +15,5 @@
 >圖片取自wGAN的論文，連結在 [這裡](https://arxiv.org/abs/1701.07875)
 ## 生成結果
 > ### Mnist 結果
-> 每張數字圖片上的 label 代表要模型生成的數字，如第一張圖片(左上角) label 為4，則代表 Generator 要生成數字4的圖片！
+> 可以發現生成的結果，並沒有很好。
 >![](https://github.com/Min-Syue/wGAN/blob/main/wGAN_4000epochs_mnist.gif)
