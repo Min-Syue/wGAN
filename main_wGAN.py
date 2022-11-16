@@ -24,6 +24,8 @@ import numpy as np
 
 if __name__ == '__main__':
 
+    #add some notation
+
     # 設定每個隱向量的大小
     latent_size_tp = 100
 
